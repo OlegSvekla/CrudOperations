@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudOperations", "CrudOperations\CrudOperations.csproj", "{EA2BC295-AE53-41B9-816E-3971B314E37A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudOperations.Api", "src\CrudOperations.Api\CrudOperations.Api.csproj", "{EA2BC295-AE53-41B9-816E-3971B314E37A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4DECEDC1-E6F4-47C5-BF55-C5F7A843AA83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudOperations.Infrastructure", "src\CrudOperations.Infrastructure\CrudOperations.Infrastructure.csproj", "{399AAD96-68BB-458D-B5EA-5C736CF273B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudOperations.Domain", "src\CrudOperations.Domain\CrudOperations.Domain.csproj", "{3B60CE47-CC50-48D4-A532-C54D3BF6E1FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudOperations.BL", "src\CrudOperations.BL\CrudOperations.BL.csproj", "{6D598395-CAD5-408C-884E-504B6BBC5EAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +23,27 @@ Global
 		{EA2BC295-AE53-41B9-816E-3971B314E37A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA2BC295-AE53-41B9-816E-3971B314E37A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA2BC295-AE53-41B9-816E-3971B314E37A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{399AAD96-68BB-458D-B5EA-5C736CF273B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{399AAD96-68BB-458D-B5EA-5C736CF273B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{399AAD96-68BB-458D-B5EA-5C736CF273B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{399AAD96-68BB-458D-B5EA-5C736CF273B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B60CE47-CC50-48D4-A532-C54D3BF6E1FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B60CE47-CC50-48D4-A532-C54D3BF6E1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B60CE47-CC50-48D4-A532-C54D3BF6E1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B60CE47-CC50-48D4-A532-C54D3BF6E1FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D598395-CAD5-408C-884E-504B6BBC5EAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D598395-CAD5-408C-884E-504B6BBC5EAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D598395-CAD5-408C-884E-504B6BBC5EAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D598395-CAD5-408C-884E-504B6BBC5EAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EA2BC295-AE53-41B9-816E-3971B314E37A} = {4DECEDC1-E6F4-47C5-BF55-C5F7A843AA83}
+		{399AAD96-68BB-458D-B5EA-5C736CF273B2} = {4DECEDC1-E6F4-47C5-BF55-C5F7A843AA83}
+		{3B60CE47-CC50-48D4-A532-C54D3BF6E1FA} = {4DECEDC1-E6F4-47C5-BF55-C5F7A843AA83}
+		{6D598395-CAD5-408C-884E-504B6BBC5EAF} = {4DECEDC1-E6F4-47C5-BF55-C5F7A843AA83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A11611D9-1ADD-47AB-92A5-CE1DA3A59CFC}
