@@ -1,12 +1,28 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrudOperations.Domain.Entities;
+using System.Reflection.Emit;
 
 namespace CrudOperations.Infrastructure.EntitiesConfiguration
 {
-    internal class UserConfiguration
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.HasKey(b => b.Id);
+
+            builder.Property(b => b.Name).IsRequired();
+            builder.Property(b => b.Age).IsRequired();
+            builder.Property(b => b.Email).IsRequired();
+
+            builder.HasMany(u => u.Roles)
+                .WithOne(ur => ur.OnlyUser)
+                .HasForeignKey(ur => ur.OnlyUserId);
+        }
     }
 }

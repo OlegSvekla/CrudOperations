@@ -12,10 +12,10 @@ namespace CrudOperations.Infrastructure.Data.Rpository.Implementation
 {
     public class EfRepository<T> : IEfRepository<T> where T : class
     {
-        private readonly LibraryDbContext _context;
+        private readonly CrudDbContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public EfRepository(LibraryDbContext context)
+        public EfRepository(CrudDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
