@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace CrudOperations.Domain.Entities
 {
-    internal class UserQueryParameters
+    public class UserQueryParameters
     {
+        public string? UserTerm { get; set; }
+        public string? UserSort { get; set; }
+
+        public string? RoleTerm { get; set; }
+        public string? RoleSort { get; set; }
+
+        public int Page { get; set; } = 1;
+        public int Limit { get; set; } = 10;
     }
 }

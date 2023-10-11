@@ -1,4 +1,5 @@
 ﻿using Sieve.Attributes;
+using System.Text.Json.Serialization;
 
 namespace CrudOperations.Domain.Entities
 {
@@ -13,6 +14,7 @@ namespace CrudOperations.Domain.Entities
 
         public string Email { get; set; }
 
+        [JsonIgnore]
         public ICollection<UserRole> UserRoles { get; set; }
     }
 }

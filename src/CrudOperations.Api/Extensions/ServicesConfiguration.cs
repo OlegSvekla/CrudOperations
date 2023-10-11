@@ -1,9 +1,10 @@
 ﻿using CrudOperations.BL.Services.Implementation;
 using CrudOperations.BL.Services.IService;
 using CrudOperations.Domain.Entities;
-using CrudOperations.Infrastructure.Data;
+using CrudOperations.Domain.Validation;
 using CrudOperations.Infrastructure.Data.Repository.Implementation;
 using CrudOperations.Infrastructure.Data.Repository.IRepository;
+using FluentValidation;
 
 namespace CrudOperations.Api.Extensions
 {
@@ -17,6 +18,8 @@ namespace CrudOperations.Api.Extensions
 
             services.AddScoped(typeof(IEfRepository<>), typeof(EfRepository<>));
             services.AddScoped<IUserService<PagedUserAndRoleResult>, UserService>();
+
+            services.AddScoped<IValidator<UserQueryParameters>, UserQueryParametersValidation>();
         }
     }
 }

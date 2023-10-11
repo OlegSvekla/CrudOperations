@@ -1,5 +1,7 @@
 ﻿using CrudOperations.BL.Services.IService;
 using CrudOperations.Domain.Entities;
+using FluentValidation;
+using LibraryAPI.Domain.Exeptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,24 +13,34 @@ namespace CrudOperations.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService<PagedUserAndRoleResult> _userService;
+        private readonly IValidator<UserQueryParameters> _validator;
 
-        public UserController(IUserService<PagedUserAndRoleResult> userService)
+        public UserController(
+            IUserService<PagedUserAndRoleResult> userService,
+            IValidator<UserQueryParameters> validator)
         {
             _userService = userService;
+            _validator = validator;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(PagedUserAndRoleResult))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<PagedUserAndRoleResult>> GetAllUsers(
-            string userTerm = null, 
-            string userSort = null, 
-            string roleTerm = null,
-            string roleSort = null,
-            int page = 1,
-            int limit = 10)
+        public async Task<ActionResult<PagedUserAndRoleResult>> GetAllUsers([FromQuery] UserQueryParameters query)
         {
-            var users = await _userService.GetAllUsersAndRoles (userTerm,  userSort,  roleTerm,  roleSort,  page,  limit);
+            var validationResult = await _validator.ValidateAsync(query);
+            if (!validationResult.IsValid)
+            {
+                throw new InvalidValueException(validationResult.ToString());
+            }
+
+            var users = await _userService.GetAllUsersAndRoles (
+                query.UserTerm,
+                query.UserSort,
+                query.RoleTerm,
+                query.RoleSort,
+                query.Page,
+                query.Limit);
 
             return Ok(users);
         }
