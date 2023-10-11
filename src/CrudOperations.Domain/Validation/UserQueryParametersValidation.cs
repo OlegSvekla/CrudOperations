@@ -8,17 +8,27 @@ using System.Threading.Tasks;
 
 namespace CrudOperations.Domain.Validation
 {
-    public class PagedUserAndRoleResultValidation : AbstractValidator<PagedUserAndRoleResult>
+    public class PagedUserAndRoleResultValidation : AbstractValidator<UserQueryParameters>
     {
         public PagedUserAndRoleResultValidation()
         {
-            RuleFor(author => author.FirstName)
-                .NotEmpty().WithMessage("First name is required.")
-                .MaximumLength(25).WithMessage("First name must not exceed 25 characters.");
+            RuleFor(query => query.Page)
+                .GreaterThanOrEqualTo(1).WithMessage("Page must be greater than or equal to 1.");
 
-            RuleFor(author => author.LastName)
-                .NotEmpty().WithMessage("Last name is required.")
-                .MaximumLength(25).WithMessage("Last name must not exceed 25 characters.");
+            RuleFor(query => query.Limit)
+                .InclusiveBetween(1, 100).WithMessage("Limit must be between 1 and 100.");
+
+            RuleFor(query => query.UserTerm)
+                .MaximumLength(50).WithMessage("UserTerm must not exceed 50 characters.");
+
+            RuleFor(query => query.UserSort)
+                .MaximumLength(50).WithMessage("UserSort must not exceed 50 characters.");
+
+            RuleFor(query => query.RoleTerm)
+                .MaximumLength(50).WithMessage("RoleTerm must not exceed 50 characters.");
+
+            RuleFor(query => query.RoleSort)
+                .MaximumLength(50).WithMessage("RoleSort must not exceed 50 characters."); ;
 
         }
     }
