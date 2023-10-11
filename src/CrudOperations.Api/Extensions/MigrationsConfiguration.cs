@@ -5,12 +5,12 @@ namespace CrudOperations.Api.Extensions
 {
     public static class MigrationsConfiguration
     {
-        public static IApplicationBuilder RunDbContextMigrations(this IApplicationBuilder app)
+        public static async Task<IApplicationBuilder> RunDbContextMigrations(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
-                var logger = serviceProvider.GetRequiredService<ILogger<CrudDbContext>>();
+                var logger = serviceProvider.GetRequiredService<ILogger<CrudDbContextSeed>>();
 
                 logger.LogInformation("Database migration running...");
 
@@ -18,6 +18,8 @@ namespace CrudOperations.Api.Extensions
                 {
                     var context = serviceProvider.GetRequiredService<CrudDbContext>();
                     context.Database.Migrate();
+
+                    await CrudDbContextSeed.SeedAsyncData(context, logger);
                 }
                 catch (Exception ex)
                 {

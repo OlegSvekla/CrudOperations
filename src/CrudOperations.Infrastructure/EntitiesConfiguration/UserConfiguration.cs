@@ -14,15 +14,12 @@ namespace CrudOperations.Infrastructure.EntitiesConfiguration
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(b => b.Id);
-
             builder.Property(b => b.Name).IsRequired();
             builder.Property(b => b.Age).IsRequired();
             builder.Property(b => b.Email).IsRequired();
 
-            builder.HasMany(u => u.Roles)
-                .WithOne(ur => ur.OnlyUser)
-                .HasForeignKey(ur => ur.OnlyUserId);
+
+
         }
     }
 }

@@ -21,7 +21,7 @@ namespace CrudOperations.Infrastructure.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CrudOperations.Domain.Entities.Roles", b =>
+            modelBuilder.Entity("CrudOperations.Domain.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,12 +29,11 @@ namespace CrudOperations.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("OnlyUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OnlyUserId");
 
                     b.ToTable("Roles");
                 });
@@ -60,23 +59,51 @@ namespace CrudOperations.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CrudOperations.Domain.Entities.Roles", b =>
+            modelBuilder.Entity("CrudOperations.Domain.Entities.UserRole", b =>
                 {
-                    b.HasOne("CrudOperations.Domain.Entities.User", "OnlyUser")
-                        .WithMany("Roles")
-                        .HasForeignKey("OnlyUserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("CrudOperations.Domain.Entities.UserRole", b =>
+                {
+                    b.HasOne("CrudOperations.Domain.Entities.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("OnlyUser");
+                    b.HasOne("CrudOperations.Domain.Entities.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CrudOperations.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("CrudOperations.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Roles");
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

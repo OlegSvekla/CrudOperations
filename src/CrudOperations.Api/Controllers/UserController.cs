@@ -5,33 +5,32 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CrudOperations.Api.Controllers
 {
+
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService<User> _userService;
+        private readonly IUserService<PagedUserAndRoleResult> _userService;
 
-        public UserController(IUserService<User> userService)
+        public UserController(IUserService<PagedUserAndRoleResult> userService)
         {
             _userService = userService;
         }
 
-        /// <summary>
-        /// Gets the list of books
-        /// </summary>        
-        /// <returns>Ok response containing books collection.</returns>
-        /// <response code="200">Returns the list of books.</response> 
-        /// <response code="404">The base is Empty. Books weren't found</response>
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IList<User>))]
+        [ProducesResponseType(200, Type = typeof(PagedUserAndRoleResult))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<IList<User>>> GetAllUsers()
+        public async Task<ActionResult<PagedUserAndRoleResult>> GetAllUsers(
+            string userTerm = null, 
+            string userSort = null, 
+            string roleTerm = null,
+            string roleSort = null,
+            int page = 1,
+            int limit = 10)
         {
-            var users = await _userService.GetAllUsers();
+            var users = await _userService.GetAllUsersAndRoles (userTerm,  userSort,  roleTerm,  roleSort,  page,  limit);
 
             return Ok(users);
         }
-
-
     }
 }

@@ -1,14 +1,9 @@
-﻿using CrudOperations.Infrastructure.Data.Rpository.IRepository;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using CrudOperations.Infrastructure.Data.Repository.IRepository;
 
-namespace CrudOperations.Infrastructure.Data.Rpository.Implementation
+namespace CrudOperations.Infrastructure.Data.Repository.Implementation
 {
     public class EfRepository<T> : IEfRepository<T> where T : class
     {
@@ -21,7 +16,7 @@ namespace CrudOperations.Infrastructure.Data.Rpository.Implementation
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>,
+        public async Task<IQueryable<T>> GetAllAsync(Func<IQueryable<T>,
            IIncludableQueryable<T, object>>? include = null,
            Expression<Func<T, bool>>? expression = null)
         {
@@ -36,7 +31,7 @@ namespace CrudOperations.Infrastructure.Data.Rpository.Implementation
                 query = include(query);
             }
 
-            return await query.AsNoTracking().ToListAsync();
+            return query.AsNoTracking();
         }
 
         public async Task<T> GetOneByAsync(Func<IQueryable<T>,

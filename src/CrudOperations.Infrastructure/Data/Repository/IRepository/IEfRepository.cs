@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrudOperations.Infrastructure.Data.Rpository.IRepository
+namespace CrudOperations.Infrastructure.Data.Repository.IRepository
 {
     public interface IEfRepository<T> where T : class
     {
@@ -15,7 +15,7 @@ namespace CrudOperations.Infrastructure.Data.Rpository.IRepository
             IIncludableQueryable<T, object>>? include = null,
             Expression<Func<T, bool>>? expression = null);
 
-        Task<IEnumerable<T>> GetAllAsync(
+        Task<IQueryable<T>> GetAllAsync(
             Func<IQueryable<T>,
             IIncludableQueryable<T, object>>? include = null,
             Expression<Func<T, bool>>? expression = null);

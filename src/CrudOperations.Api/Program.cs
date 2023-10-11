@@ -1,4 +1,7 @@
 using CrudOperations.Api.Extensions;
+using CrudOperations.Domain.Entities;
+using CrudOperations.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,7 @@ SwaggerConfiguration.Configuration(builder.Services);
 
 var app = builder.Build();
 
-app.RunDbContextMigrations();
+await app.RunDbContextMigrations();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
