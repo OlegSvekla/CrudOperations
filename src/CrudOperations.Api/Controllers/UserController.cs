@@ -1,6 +1,7 @@
 ﻿using CrudOperations.BL.Services.IService;
 using CrudOperations.Domain.Entities;
 using FluentValidation;
+using LibraryAPI.Domain.Exeptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,7 @@ namespace CrudOperations.Api.Controllers
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(PagedUserAndRoleResult))]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<PagedUserAndRoleResult>> GetAllUsers(UserQueryParameters query)
+        public async Task<ActionResult<PagedUserAndRoleResult>> GetAllUsers([FromQuery] UserQueryParameters query)
         {
             var validationResult = await _validator.ValidateAsync(query);
             if (!validationResult.IsValid)

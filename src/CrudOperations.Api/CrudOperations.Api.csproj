@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CrudOperations.BL\CrudOperations.BL.csproj" />
+    <ProjectReference Include="..\CrudOperations.Domain\CrudOperations.Domain.csproj" />
     <ProjectReference Include="..\CrudOperations.Infrastructure\CrudOperations.Infrastructure.csproj" />
   </ItemGroup>
 

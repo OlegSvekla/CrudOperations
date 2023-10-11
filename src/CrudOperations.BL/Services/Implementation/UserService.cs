@@ -3,8 +3,6 @@ using CrudOperations.Domain.Entities;
 using CrudOperations.Infrastructure.Data.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 
 namespace CrudOperations.BL.Services.Implementation
 {
@@ -19,100 +17,52 @@ namespace CrudOperations.BL.Services.Implementation
             _roleRepository = roleRepository;
         }
 
-        //public async Task<PagedUserResult> GetAllUsers(string term, string sort, int page, int limit)
-        //{
-        //    var usersData = await _userRepository.GetAllAsync();
-        //    var usersQuery = usersData.AsQueryable();
-
-        //    // Применение фильтрации
-        //    if (!string.IsNullOrWhiteSpace(term))
-        //    {
-        //        term = term.Trim().ToLower();
-        //        usersQuery = usersQuery.Where(u =>
-        //            u.Name.ToLower().Contains(term) ||
-        //            u.Age.ToString().Contains(term) ||
-        //            u.Email.ToLower().Contains(term)
-        //        );
-        //    }
-
-        //    // Применение сортировки
-        //    if (!string.IsNullOrWhiteSpace(sort))
-        //    {
-        //        usersQuery = ApplySorting(usersQuery, sort);
-        //    }
-
-        //    // Получение общего количества записей
-        //    var totalCount = await usersQuery.CountAsync();
-
-        //    // Применение пагинации
-        //    usersQuery = usersQuery.Skip((page - 1) * limit).Take(limit);
-
-        //    var pagedUsers = await usersQuery.ToListAsync();
-
-        //    var result = new PagedUserResult
-        //    {
-        //        Users = pagedUsers,
-        //        TotalCount = totalCount,
-        //        TotalPages = (int)Math.Ceiling((double)totalCount / limit)
-        //    };
-
-        //    return result;
-        //}
-        public async Task<PagedUserAndRoleResult> GetAllUsersAndRoles(string userTerm, string userSort, string roleTerm, string roleSort, int page, int limit)
+        public async Task<PagedUserAndRoleResult> GetAllUsersAndRoles(
+            string userTerm,
+            string userSort,
+            string roleTerm,
+            string roleSort,
+            int page,
+            int limit)
         {
-            var usersData = await _userRepository.GetAllAsync();
-            var usersQuery = usersData.AsQueryable();
 
-            var rolesData = await _roleRepository.GetAllAsync();
-            var rolesQuery = rolesData.AsQueryable();
+            var usersQuery = await _userRepository.GetFilteredAsync(
+                user => (userTerm == null ||
+                    user.Name.Contains(userTerm) ||
+                    user.Age.ToString().Contains(userTerm) ||
+                    user.Email.Contains(userTerm)
+                )
+            );
 
-            // Применение фильтрации для пользователей
-            if (!string.IsNullOrWhiteSpace(userTerm))
-            {
-                userTerm = userTerm.Trim().ToLower();
-                usersQuery = usersQuery.Where(u =>
-                    u.Name.ToLower().Contains(userTerm) ||
-                    u.Age.ToString().Contains(userTerm) ||
-                    u.Email.ToLower().Contains(userTerm)
-                );
-            }
+            var rolesQuery = await _roleRepository.GetFilteredAsync(
+                role => (roleTerm == null || role.Name.Contains(roleTerm))
+            );
 
-            // Применение фильтрации для ролей
-            if (!string.IsNullOrWhiteSpace(roleTerm))
-            {
-                roleTerm = roleTerm.Trim().ToLower();
-                rolesQuery = rolesQuery.Where(r =>
-                    r.Name.ToLower().Contains(roleTerm)
-                );
-            }
-
-            // Применение сортировки для пользователей
             if (!string.IsNullOrWhiteSpace(userSort))
             {
                 usersQuery = ApplySortingUser(usersQuery, userSort);
             }
 
-            // Применение сортировки для ролей
             if (!string.IsNullOrWhiteSpace(roleSort))
             {
                 rolesQuery = ApplySortingRole(rolesQuery, roleSort);
             }
 
-            // Выполнение операций пагинации для пользователей и ролей
+            var totalUsers = await usersQuery.CountAsync();
+            var totalRoles = await rolesQuery.CountAsync();
+
             usersQuery = usersQuery.Skip((page - 1) * limit).Take(limit);
             rolesQuery = rolesQuery.Skip((page - 1) * limit).Take(limit);
 
-            // Получение общего количества записей
-            var userTotalCount = await usersQuery.CountAsync();
-            var roleTotalCount = await rolesQuery.CountAsync();
+            var users = await usersQuery.ToListAsync();
+            var roles = await rolesQuery.ToListAsync();
 
-            // Объединение результатов и возвращение
             var pagedResult = new PagedUserAndRoleResult
             {
-                Users = await usersQuery.ToListAsync(),
-                Roles = await rolesQuery.ToListAsync(),
-                TotalCount = userTotalCount + roleTotalCount,
-                TotalPages = (int)Math.Ceiling((double)(userTotalCount + roleTotalCount) / limit)
+                Users = users,
+                Roles = roles,
+                TotalCount = totalUsers + totalRoles,
+                TotalPages = (int)Math.Ceiling((double)(totalUsers + totalRoles) / limit)
             };
 
             return pagedResult;
@@ -178,62 +128,6 @@ namespace CrudOperations.BL.Services.Implementation
                     return user => user.Id;
             }
         }
-
-
-
-        //public async Task<IList<User>> GetAllUsers(
-        //    int page = 1,
-        //    int pageSize = 10,
-        //    string sortBy = "Id",
-        //    string sortOrder = "asc",
-        //    string nameFilter = null,
-        //    int? ageFilter = null,
-        //    string emailFilter = null)
-        //{
-        //    var usersTask = await _userRepository.GetAllAsync(); // Получение задачи с пользователем
-
-        //    var usersQuery = usersTask.AsQueryable(); // Преобразование в IQueryable
-
-        //    // Применение фильтрации по атрибутам модели User
-        //    if (!string.IsNullOrEmpty(nameFilter))
-        //    {
-        //        usersQuery = usersQuery.Where(u => u.Name.Contains(nameFilter));
-        //    }
-        //    if (ageFilter.HasValue)
-        //    {
-        //        usersQuery = usersQuery.Where(u => u.Age == ageFilter.Value);
-        //    }
-        //    if (!string.IsNullOrEmpty(emailFilter))
-        //    {
-        //        usersQuery = usersQuery.Where(u => u.Email.Contains(emailFilter));
-        //    }
-
-        //    // Применение сортировки
-        //    if (!string.IsNullOrEmpty(sortBy))
-        //    {
-        //        switch (sortBy)
-        //        {
-        //            case "Id":
-        //                usersQuery = sortOrder == "asc"
-        //                    ? usersQuery.OrderBy(u => u.Id)
-        //                    : usersQuery.OrderByDescending(u => u.Id);
-        //                break;
-        //            case "Name":
-        //                usersQuery = sortOrder == "asc"
-        //                    ? usersQuery.OrderBy(u => u.Name)
-        //                    : usersQuery.OrderByDescending(u => u.Name);
-        //                break;
-        //                // Добавьте другие атрибуты для сортировки по аналогии
-        //        }
-        //    }
-
-        //    // Применение пагинации
-        //    usersQuery = usersQuery.Skip((page - 1) * pageSize).Take(pageSize);
-
-        //    var users = await usersQuery.ToListAsync();
-
-        //    return users;
-        //}
 
         public Task<bool> AddUser(User user)
         {

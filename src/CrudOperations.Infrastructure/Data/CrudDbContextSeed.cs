@@ -64,7 +64,7 @@ namespace CrudOperations.Infrastructure.Data
                         UserRoles = new List<UserRole>
                         {
                             new UserRole {  RoleId = 1 }
-                        }
+                        },
                     },
                     new User
                     {
