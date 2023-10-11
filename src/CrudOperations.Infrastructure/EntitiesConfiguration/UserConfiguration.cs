@@ -17,9 +17,6 @@ namespace CrudOperations.Infrastructure.EntitiesConfiguration
             builder.Property(b => b.Name).IsRequired();
             builder.Property(b => b.Age).IsRequired();
             builder.Property(b => b.Email).IsRequired();
-
-
-
         }
     }
 }

@@ -17,7 +17,9 @@ namespace CrudOperations.Api.Extensions
             services.AddEndpointsApiExplorer();
 
             services.AddScoped(typeof(IEfRepository<>), typeof(EfRepository<>));
-            services.AddScoped<IUserService<PagedUserAndRoleResult>, UserService>();
+
+            services.AddScoped<IFilterService<PagedUserAndRoleResult>, UserService>();
+            services.AddScoped<IUserService<User>, UserService>();
 
             services.AddScoped<IValidator<UserQueryParameters>, UserQueryParametersValidation>();
         }

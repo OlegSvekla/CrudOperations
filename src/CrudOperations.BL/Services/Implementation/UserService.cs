@@ -1,12 +1,13 @@
 ﻿using CrudOperations.BL.Services.IService;
 using CrudOperations.Domain.Entities;
 using CrudOperations.Infrastructure.Data.Repository.IRepository;
+using LibraryAPI.Domain.Exeptions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace CrudOperations.BL.Services.Implementation
 {
-    public class UserService : IUserService<PagedUserAndRoleResult>
+    public class UserService : IFilterService<PagedUserAndRoleResult>, IUserService<User>
     {
         private readonly IEfRepository<User> _userRepository;
         private readonly IEfRepository<Role> _roleRepository;
@@ -129,7 +130,29 @@ namespace CrudOperations.BL.Services.Implementation
             }
         }
 
-        public Task<bool> AddUser(User user)
+        public async Task<User> GetUserById(int id)
+        {
+            var user = await _userRepository.GetOneByAsync(expression: _ => _.Id.Equals(id));
+            if (user is null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        public async Task<bool> AddUser(User user)
+        {
+            var result = await _userRepository.AddAsync(user);
+            if (result is null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public Task<User> UpdateUser(int id, User book)
         {
             throw new NotImplementedException();
         }
@@ -139,52 +162,7 @@ namespace CrudOperations.BL.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<User> GetUseryId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> UpdateUser(int id, User book)
-        {
-            throw new NotImplementedException();
-        }
-
-        PagedUserAndRoleResult IUserService<PagedUserAndRoleResult>.GetUseryId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public PagedUserAndRoleResult AddUser(PagedUserResult user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public PagedUserAndRoleResult UpdateUser(int id, PagedUserResult user)
-        {
-            throw new NotImplementedException();
-        }
-
-        PagedUserAndRoleResult IUserService<PagedUserAndRoleResult>.DeleteUser(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public PagedUserAndRoleResult AddUser(PagedUserAndRoleResult user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public PagedUserAndRoleResult UpdateUser(int id, PagedUserAndRoleResult user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedUserAndRoleResult> GetAllUsers(string term, string sort, int page, int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PagedUserAndRoleResult> GetAllUsers(string userTerm, string userSort, string roleTerm, string roleSort, int page, int limit)
+        public Task<User> AddRole(Role role, int id)
         {
             throw new NotImplementedException();
         }

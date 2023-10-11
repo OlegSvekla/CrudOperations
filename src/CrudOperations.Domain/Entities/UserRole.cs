@@ -7,7 +7,5 @@
 
         public int RoleId { get; set; } // Замените на Guid
         public Role Role { get; set; }
-
-
     }
 }

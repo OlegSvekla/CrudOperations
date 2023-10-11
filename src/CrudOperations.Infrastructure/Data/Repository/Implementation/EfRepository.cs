@@ -44,7 +44,7 @@ namespace CrudOperations.Infrastructure.Data.Repository.Implementation
             return query.AsNoTracking();
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Func<IQueryable<T>,
+        public async Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>,
            IIncludableQueryable<T, object>>? include = null,
            Expression<Func<T, bool>>? expression = null)
         {
@@ -59,7 +59,7 @@ namespace CrudOperations.Infrastructure.Data.Repository.Implementation
                 query = include(query);
             }
 
-            return query.AsNoTracking();
+            return await query.AsNoTracking().ToListAsync();
         }
 
         public async Task<T> GetOneByAsync(Func<IQueryable<T>,
