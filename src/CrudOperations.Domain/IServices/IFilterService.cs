@@ -9,7 +9,7 @@ namespace CrudOperations.BL.Services.IService
 {
     public interface IFilterService<PagedUserAndRoleResult>
     {
-        Task<PagedUserAndRoleResult> GetAllUsersAndRoles(
+        Task<PagedUserAndRoleResult> SortUsers(
             string userTerm,
             string userSort,
             string roleTerm,

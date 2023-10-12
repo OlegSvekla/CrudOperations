@@ -1,4 +1,4 @@
-﻿using CrudOperations.Domain.Entities;
+﻿using CrudOperations.Domain.SortFilterPaginationModels;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -33,8 +33,6 @@ namespace CrudOperations.Domain.Validation
             RuleFor(query => query.RoleSort)
                 .MaximumLength(50).When(query => !string.IsNullOrWhiteSpace(query.RoleSort))
                 .WithMessage("RoleSort must not exceed 50 characters.");
-
-
         }
     }
 }

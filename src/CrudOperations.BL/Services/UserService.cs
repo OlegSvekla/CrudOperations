@@ -1,24 +1,34 @@
-﻿using CrudOperations.BL.Services.IService;
+﻿using AutoMapper;
+using CrudOperations.BL.Services.IService;
+using CrudOperations.Domain.Dtos;
 using CrudOperations.Domain.Entities;
+using CrudOperations.Domain.SortFilterPaginationModels;
 using CrudOperations.Infrastructure.Data.Repository.IRepository;
-using LibraryAPI.Domain.Exeptions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace CrudOperations.BL.Services.Implementation
+namespace CrudOperations.BL.Services
 {
     public class UserService : IFilterService<PagedUserAndRoleResult>, IUserService<User>
     {
         private readonly IEfRepository<User> _userRepository;
         private readonly IEfRepository<Role> _roleRepository;
+        private readonly IEfRepository<UserRole> _userRoleRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IEfRepository<User> userRepository, IEfRepository<Role> roleRepository)
+        public UserService(
+            IEfRepository<User> userRepository,
+            IEfRepository<Role> roleRepository,
+            IMapper mapper,
+            IEfRepository<UserRole> userRoleRepository)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _mapper = mapper;
+            _userRoleRepository = userRoleRepository;
         }
 
-        public async Task<PagedUserAndRoleResult> GetAllUsersAndRoles(
+        public async Task<PagedUserAndRoleResult> SortUsers(
             string userTerm,
             string userSort,
             string roleTerm,
@@ -26,17 +36,16 @@ namespace CrudOperations.BL.Services.Implementation
             int page,
             int limit)
         {
-
             var usersQuery = await _userRepository.GetFilteredAsync(
-                user => (userTerm == null ||
+                user => userTerm == null ||
                     user.Name.Contains(userTerm) ||
                     user.Age.ToString().Contains(userTerm) ||
                     user.Email.Contains(userTerm)
-                )
+                
             );
 
             var rolesQuery = await _roleRepository.GetFilteredAsync(
-                role => (roleTerm == null || role.Name.Contains(roleTerm))
+                role => roleTerm == null || role.Name.Contains(roleTerm)
             );
 
             if (!string.IsNullOrWhiteSpace(userSort))
@@ -67,6 +76,96 @@ namespace CrudOperations.BL.Services.Implementation
             };
 
             return pagedResult;
+        }
+
+        public async Task<User> GetUserById(int id)
+        {
+            var user = await _userRepository.GetOneByAsync(expression: _ => _.Id.Equals(id));
+            if (user is null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        public async Task<bool> AddUser(UserDto userDto)
+        {
+            var existingUser = await _userRepository.GetOneByAsync(expression: u => u.Email == userDto.Email);
+            if (existingUser != null)
+            {
+                return false;
+            }
+
+            var user = _mapper.Map<User>(userDto);
+
+            var result = await _userRepository.AddAsync(user);
+
+            return true;
+        }
+
+        public async Task<User> UpdateUser(int id, UserDto userDto)
+        {
+            var existingUser = await _userRepository.GetOneByAsync(expression: userDto => userDto.Id == id);
+            if (existingUser is null)
+            {
+                return null;
+            }
+            else
+            {
+                existingUser.Name = userDto.Name;
+                existingUser.Age = userDto.Age;
+                existingUser.Email = userDto.Email;
+
+                await _userRepository.UpdateAsync(existingUser);
+                return existingUser;
+            }
+        }
+
+        public async Task<bool> DeleteUser(int userId)
+        {
+            var userToDelete = await _userRepository.GetOneByAsync(expression: _ => _.Id.Equals(userId));
+            if (userToDelete is null)
+            {
+                return false;
+            }
+
+            await _userRepository.DeleteAsync(userToDelete!);
+
+            return true;
+        }
+
+        public async Task<bool> AddRoleToUser(int userId, RoleDto roleName)
+        {
+            var existingUser = await _userRepository.GetOneByAsync(expression: user => user.Id == userId);
+            if (existingUser is null)
+            {
+                return false;
+            }
+            if (existingUser.UserRoles != null && existingUser.UserRoles.Any(ur => ur.Role.Name == roleName.Name))
+            {
+                return false;
+            }
+
+            var existingRole = await _roleRepository.GetOneByAsync(expression: role => role.Name == roleName.Name);
+            if (existingRole is null)
+            {
+                var role = _mapper.Map<Role>(roleName);
+
+                await _roleRepository.AddAsync(role);
+
+                existingRole = role;
+            }
+            if (existingUser.UserRoles is null)
+            {
+                existingUser.UserRoles = new List<UserRole>();
+            }
+
+            existingUser.UserRoles.Add(new UserRole { UserId = existingUser.Id, RoleId = existingRole.Id });
+
+            await _userRepository.UpdateAsync(existingUser);
+
+            return true;
         }
 
         private IQueryable<User> ApplySortingUser(IQueryable<User> query, string sort)
@@ -119,6 +218,7 @@ namespace CrudOperations.BL.Services.Implementation
                     return user => user.Id;
             }
         }
+
         private Expression<Func<Role, object>> ApplySortOrderRole(string field)
         {
             switch (field)
@@ -128,43 +228,6 @@ namespace CrudOperations.BL.Services.Implementation
                 default:
                     return user => user.Id;
             }
-        }
-
-        public async Task<User> GetUserById(int id)
-        {
-            var user = await _userRepository.GetOneByAsync(expression: _ => _.Id.Equals(id));
-            if (user is null)
-            {
-                return null;
-            }
-
-            return user;
-        }
-
-        public async Task<bool> AddUser(User user)
-        {
-            var result = await _userRepository.AddAsync(user);
-            if (result is null)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public Task<User> UpdateUser(int id, User book)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> DeleteUser(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<User> AddRole(Role role, int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

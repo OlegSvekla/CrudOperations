@@ -15,10 +15,6 @@ namespace CrudOperations.Infrastructure.Data.Repository.IRepository
             IIncludableQueryable<T, object>>? include = null,
             Expression<Func<T, bool>>? expression = null);
 
-        Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>,
-           IIncludableQueryable<T, object>>? include = null,
-           Expression<Func<T, bool>>? expression = null);
-
         Task<IQueryable<T>> GetFilteredAsync(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
