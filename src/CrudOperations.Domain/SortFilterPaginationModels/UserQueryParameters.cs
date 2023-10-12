@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrudOperations.Domain.Entities
+namespace CrudOperations.Domain.SortFilterPaginationModels
 {
     public class UserQueryParameters
     {

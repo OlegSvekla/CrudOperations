@@ -60,7 +60,7 @@ namespace CrudOperations.Infrastructure.Data
                     {
                         Name = "User1",
                         Age = 1,
-                        Email = "User1@example.com",
+                        Email = "User1@mail.com",
                         UserRoles = new List<UserRole>
                         {
                             new UserRole {  RoleId = 1 }
@@ -70,7 +70,7 @@ namespace CrudOperations.Infrastructure.Data
                     {
                         Name = "User2",
                         Age = 2,
-                        Email = "User2@example.com",
+                        Email = "User2@mail.com",
                         UserRoles = new List<UserRole>
                         {
                             new UserRole { RoleId = 2 }
@@ -80,7 +80,7 @@ namespace CrudOperations.Infrastructure.Data
                     {
                         Name = "User3",
                         Age = 3,
-                        Email = "User3@example.com",
+                        Email = "User3@mail.com",
                         UserRoles = new List<UserRole>
                         {
                             new UserRole { RoleId = 3}
@@ -90,7 +90,7 @@ namespace CrudOperations.Infrastructure.Data
                     {
                         Name = "User4",
                         Age = 4,
-                        Email = "User4@example.com",
+                        Email = "User4@mail.com",
                         UserRoles = new List<UserRole>
                         {
                             new UserRole { RoleId = 1},
@@ -102,7 +102,7 @@ namespace CrudOperations.Infrastructure.Data
                     {
                         Name = "User5",
                         Age = 4,
-                        Email = "User5@example.com",
+                        Email = "User5@mail.com",
                         UserRoles = new List<UserRole>
                         {
                             new UserRole { RoleId = 2},

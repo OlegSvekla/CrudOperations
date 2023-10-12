@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using CrudOperations.Infrastructure.Data.Repository.IRepository;
 
-namespace CrudOperations.Infrastructure.Data.Repository.Implementation
+namespace CrudOperations.Infrastructure.Data.Repository
 {
     public class EfRepository<T> : IEfRepository<T> where T : class
     {
@@ -39,24 +39,6 @@ namespace CrudOperations.Infrastructure.Data.Repository.Implementation
                 {
                     query = query.Include(includeProperty);
                 }
-            }
-
-            return query.AsNoTracking();
-        }
-
-        public async Task<IQueryable<T>> GetAllAsync(Func<IQueryable<T>,
-           IIncludableQueryable<T, object>>? include = null,
-           Expression<Func<T, bool>>? expression = null)
-        {
-            IQueryable<T> query = _dbSet;
-
-            if (expression is not null)
-            {
-                query = query.Where(expression);
-            }
-            if (include is not null)
-            {
-                query = include(query);
             }
 
             return query.AsNoTracking();

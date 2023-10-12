@@ -26,7 +26,6 @@ namespace CrudOperations.Api.Extensions
                     logger.LogError(ex, "An error occurred while seeding the database.");
                 }
             }
-
             return app;
         }
     }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CrudOperations.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(CrudDbContext))]
-    [Migration("20231010171900_InitialSchema")]
+    [Migration("20231011195059_InitialSchema")]
     partial class InitialSchema
     {
         /// <inheritdoc />
@@ -54,13 +54,16 @@ namespace CrudOperations.Infrastructure.Data.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
